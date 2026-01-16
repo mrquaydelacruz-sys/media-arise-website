@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": ["./**/*", "../node_modules/@sanity/**/*"],
+  "exclude": ["../node_modules", "../dist"]
+}
