@@ -19,7 +19,7 @@ export default function BlogPage() {
               </h2>
               <p className="text-gray-600 text-sm mb-4">Coming Soon</p>
               <p className="text-gray-700">
-                We're preparing inspiring content about Christian living, faith journeys, 
+                We&apos;re preparing inspiring content about Christian living, faith journeys, 
                 and spiritual growth. Check back soon for new articles!
               </p>
             </div>

@@ -21,7 +21,7 @@ export default function AboutPage() {
             <p className="text-gray-700 leading-relaxed">
               We are friends united by the purpose of <strong>seeking the absolute Truth</strong>. 
               Our diverse denominations and backgrounds have not hindered us. Instead, we found 
-              common ground in <strong>learning and receiving God's grace, love, and mercy</strong>. 
+              common ground in <strong>learning and receiving God&apos;s grace, love, and mercy</strong>. 
               As a <strong>Jesus-focused ministry</strong>, we believe that <strong>Jesus is our one true God</strong>.
             </p>
           </section>
@@ -29,10 +29,10 @@ export default function AboutPage() {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-700 leading-relaxed">
-              As a <strong>Jesus-focused ministry</strong>, our mission is to spread the Gospel and share God's truth 
+              As a <strong>Jesus-focused ministry</strong>, our mission is to spread the Gospel and share God&apos;s truth 
               through digital fellowship and media. We are committed to creating a space where people from all 
               backgrounds can come together, set aside denominational differences, and focus on the absolute truth 
-              of God's Word. We seek to use technology to bridge gaps, connect believers worldwide, and help others 
+              of God&apos;s Word. We seek to use technology to bridge gaps, connect believers worldwide, and help others 
               grow in their relationship with Jesus Christ.
             </p>
           </section>
@@ -40,7 +40,7 @@ export default function AboutPage() {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Vision</h2>
             <p className="text-gray-700 leading-relaxed">
-              Our vision is to be a beacon of light in the digital world, arising to shine God's glory through 
+              Our vision is to be a beacon of light in the digital world, arising to shine God&apos;s glory through 
               every platform available to us. We envision a global community united in Christ, where technology 
               becomes a powerful tool for spreading the Gospel, building authentic relationships, and deepening 
               faith. We aim to see believers from every nation, denomination, and background come together to 
@@ -64,19 +64,19 @@ export default function AboutPage() {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">How We Got Our Name</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              The name <strong>"Media Arise"</strong> was inspired during a Sunday service. As{' '}
-              <strong>Pastor Donny</strong> preached, we were moved by the <strong>biblical call to 'Arise'</strong> and 
-              let God's light shine.
+              The name <strong>&quot;Media Arise&quot;</strong> was inspired during a Sunday service. As{' '}
+              <strong>Pastor Donny</strong> preached, we were moved by the <strong>biblical call to &apos;Arise&apos;</strong> and 
+              let God&apos;s light shine.
             </p>
             <blockquote className="border-l-4 border-black pl-6 my-6 italic text-gray-700">
-              <p className="mb-2">"Arise, shine; for thy light is come, and the glory of the LORD is risen upon thee."</p>
+              <p className="mb-2">&quot;Arise, shine; for thy light is come, and the glory of the LORD is risen upon thee.&quot;</p>
               <cite className="text-sm text-gray-600">— Isaiah 60:1 (KJV)</cite>
             </blockquote>
             <p className="text-gray-700 leading-relaxed">
-              After recognizing our calling to use our professional skills for God's glory, we met with 
+              After recognizing our calling to use our professional skills for God&apos;s glory, we met with 
               Pastor Donny over coffee to discuss the vision. The name <strong>Media Arise</strong> was established 
               by combining our <strong>background in media with this spiritual mandate</strong>, signifying a call to 
-              stand up and broadcast God's truth to the world.
+              stand up and broadcast God&apos;s truth to the world.
             </p>
             <p className="text-gray-700 leading-relaxed mt-4 font-semibold">
               We are currently continuing to grow and meet online. To God be the glory!
@@ -95,18 +95,18 @@ export default function AboutPage() {
               </h3>
               <p className="text-gray-700 leading-relaxed">
                 A: We were <strong>hungry for the Truth</strong> and wanted a space to set aside denominational 
-                differences and focus purely on the absolute truth of God's Word and His grace.
+                differences and focus purely on the absolute truth of God&apos;s Word and His grace.
               </p>
             </div>
 
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Q: What is the meaning behind the name "Media Arise"?
+                Q: What is the meaning behind the name &quot;Media Arise&quot;?
               </h3>
               <p className="text-gray-700 leading-relaxed">
                 A: The name comes from a <strong>conviction to use media to spread the Gospel</strong>. It was inspired 
-                by a sermon by <strong>Pastor Donny</strong> on the word "Arise." Our team met with Pastor Donny and agreed 
-                on "Media Arise" as a symbol of our mission: <strong>to arise and shine the light of Jesus through digital fellowship</strong>.
+                by a sermon by <strong>Pastor Donny</strong> on the word &quot;Arise.&quot; Our team met with Pastor Donny and agreed 
+                on &quot;Media Arise&quot; as a symbol of our mission: <strong>to arise and shine the light of Jesus through digital fellowship</strong>.
               </p>
             </div>
 
