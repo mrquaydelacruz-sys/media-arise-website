@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {createClient} from '@sanity/client'
+import {appendToGoogleSheet} from '@/lib/googleSheets'
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -31,6 +32,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const registeredAt = new Date().toISOString()
+
     // Create registration document in Sanity
     const registration = await client.create({
       _type: 'registration',
@@ -46,7 +49,22 @@ export async function POST(request: NextRequest) {
       additionalInfo: additionalInfo || '',
       hearAbout: hearAbout || '',
       convenientTime: convenientTime || '',
-      registeredAt: new Date().toISOString(),
+      registeredAt,
+      status: 'pending',
+    })
+
+    // Also push to Google Sheets
+    await appendToGoogleSheet({
+      programTitle: programTitle || 'Unknown Program',
+      firstName,
+      lastName,
+      email,
+      phone: phone || '',
+      reason,
+      additionalInfo: additionalInfo || '',
+      hearAbout: hearAbout || '',
+      convenientTime: convenientTime || '',
+      registeredAt,
       status: 'pending',
     })
 
