@@ -32,6 +32,7 @@ export default function Navigation() {
               height={40}
               className="h-10 w-10 object-contain"
               priority
+              unoptimized
             />
             <span className="text-2xl font-bold text-gray-900">Media Arise</span>
           </Link>

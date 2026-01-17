@@ -105,6 +105,7 @@ export default async function Footer() {
               width={32}
               height={32}
               className="h-8 w-8 object-contain"
+              unoptimized
             />
             <span className="text-xl font-bold text-white">Media Arise</span>
           </div>
