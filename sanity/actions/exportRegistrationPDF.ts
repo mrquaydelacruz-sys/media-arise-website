@@ -12,7 +12,7 @@ export const exportRegistrationPDF: DocumentActionComponent = (props) => {
 
   return {
     label: 'Export as PDF',
-    icon: DownloadIcon,
+    icon: DownloadIcon as any,
     shortcut: undefined,
     onHandle: async () => {
       try {
