@@ -1,8 +1,16 @@
 'use client'
 
 import {useState, useEffect} from 'react'
-import {client} from '@/lib/sanity.client'
+import {createClient} from 'next-sanity'
 import {websiteAnnouncementQuery} from '@/lib/queries'
+
+// Create a client without CDN for fresh data
+const announcementClient = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '1bny7eub',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  apiVersion: '2024-01-01',
+  useCdn: false, // Disable CDN to get fresh data immediately
+})
 
 export default function WebsiteAnnouncement() {
   const [announcement, setAnnouncement] = useState<{
@@ -15,17 +23,29 @@ export default function WebsiteAnnouncement() {
   useEffect(() => {
     async function fetchAnnouncement() {
       try {
-        const data = await client.fetch(websiteAnnouncementQuery)
+        // Fetch without CDN to get fresh data immediately
+        const data = await announcementClient.fetch(websiteAnnouncementQuery)
         console.log('Website announcement data:', data)
+        console.log('Announcement enabled:', data?.enabled)
+        console.log('Announcement message:', data?.message)
+        
         if (data && data.enabled && data.message) {
           setAnnouncement(data)
           // Check if user has dismissed this announcement
           const dismissed = localStorage.getItem('announcement-dismissed')
+          console.log('LocalStorage dismissed flag:', dismissed)
           if (!dismissed) {
             setIsVisible(true)
+            console.log('Setting announcement visible')
+          } else {
+            console.log('Announcement was previously dismissed')
           }
         } else {
-          console.log('Announcement not enabled or missing data:', { enabled: data?.enabled, hasMessage: !!data?.message })
+          console.log('Announcement not enabled or missing data:', { 
+            enabled: data?.enabled, 
+            hasMessage: !!data?.message,
+            data: data 
+          })
         }
       } catch (error) {
         console.error('Error fetching website announcement:', error)
