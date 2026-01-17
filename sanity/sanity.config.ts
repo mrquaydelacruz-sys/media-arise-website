@@ -1,3 +1,5 @@
+'use client'
+
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
 import {visionTool} from '@sanity/vision'
@@ -8,8 +10,9 @@ export default defineConfig({
   name: 'media-arise',
   title: 'Media Arise CMS',
 
-  projectId: '1bny7eub',
-  dataset: 'production',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '1bny7eub',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  basePath: '/studio', // Required for embedding in Next.js
 
   plugins: [deskTool(), visionTool()],
 

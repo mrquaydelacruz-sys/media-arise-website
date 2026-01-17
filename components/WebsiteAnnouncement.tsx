@@ -16,6 +16,7 @@ export default function WebsiteAnnouncement() {
     async function fetchAnnouncement() {
       try {
         const data = await client.fetch(websiteAnnouncementQuery)
+        console.log('Website announcement data:', data)
         if (data && data.enabled && data.message) {
           setAnnouncement(data)
           // Check if user has dismissed this announcement
@@ -23,6 +24,8 @@ export default function WebsiteAnnouncement() {
           if (!dismissed) {
             setIsVisible(true)
           }
+        } else {
+          console.log('Announcement not enabled or missing data:', { enabled: data?.enabled, hasMessage: !!data?.message })
         }
       } catch (error) {
         console.error('Error fetching website announcement:', error)
