@@ -9,5 +9,7 @@ import contactPage from './contactPage'
 import pastSermon from './pastSermon'
 import podcast from './podcast'
 import givingPage from './givingPage'
+import program from './program'
+import registration from './registration'
 
-export const schemaTypes = [fellowshipSession, announcement, event, ministry, contactMessage, sessionRecording, footer, contactPage, pastSermon, podcast, givingPage]
+export const schemaTypes = [fellowshipSession, announcement, event, ministry, contactMessage, sessionRecording, footer, contactPage, pastSermon, podcast, givingPage, program, registration]

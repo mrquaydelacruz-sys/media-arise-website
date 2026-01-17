@@ -191,3 +191,56 @@ export const givingPageQuery = groq`
     wiseAdditionalInfo,
   }
 `
+
+export const programsQuery = groq`
+  *[_type == "program" && isActive == true && registrationOpen == true] | order(priority desc, startDate asc) {
+    _id,
+    title,
+    slug,
+    description,
+    fullDescription,
+    image {
+      ...,
+      asset-> {
+        _id,
+        url,
+        metadata {
+          dimensions
+        }
+      }
+    },
+    startDate,
+    endDate,
+    location,
+    capacity,
+    registrationDeadline,
+    category,
+  }
+`
+
+export const programBySlugQuery = groq`
+  *[_type == "program" && slug.current == $slug && isActive == true][0] {
+    _id,
+    title,
+    slug,
+    description,
+    fullDescription,
+    image {
+      ...,
+      asset-> {
+        _id,
+        url,
+        metadata {
+          dimensions
+        }
+      }
+    },
+    startDate,
+    endDate,
+    location,
+    capacity,
+    registrationDeadline,
+    category,
+    registrationOpen,
+  }
+`
