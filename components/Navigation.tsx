@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import {usePathname} from 'next/navigation'
 import {useState} from 'react'
 
@@ -23,7 +24,15 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/logo.png"
+              alt="Media Arise"
+              width={40}
+              height={40}
+              className="h-10 w-10 object-contain"
+              priority
+            />
             <span className="text-2xl font-bold text-gray-900">Media Arise</span>
           </Link>
 

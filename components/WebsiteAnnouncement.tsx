@@ -19,8 +19,17 @@ export default function WebsiteAnnouncement() {
   } | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
+
+  // Ensure component only renders after client-side mount to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
+    // Only fetch after component has mounted on client
+    if (!mounted) return
+
     async function fetchAnnouncement() {
       try {
         // Fetch without CDN to get fresh data immediately
@@ -31,14 +40,16 @@ export default function WebsiteAnnouncement() {
         
         if (data && data.enabled && data.message) {
           setAnnouncement(data)
-          // Check if user has dismissed this announcement
-          const dismissed = localStorage.getItem('announcement-dismissed')
-          console.log('LocalStorage dismissed flag:', dismissed)
-          if (!dismissed) {
-            setIsVisible(true)
-            console.log('Setting announcement visible')
-          } else {
-            console.log('Announcement was previously dismissed')
+          // Check if user has dismissed this announcement (only available on client)
+          if (typeof window !== 'undefined') {
+            const dismissed = localStorage.getItem('announcement-dismissed')
+            console.log('LocalStorage dismissed flag:', dismissed)
+            if (!dismissed) {
+              setIsVisible(true)
+              console.log('Setting announcement visible')
+            } else {
+              console.log('Announcement was previously dismissed')
+            }
           }
         } else {
           console.log('Announcement not enabled or missing data:', { 
@@ -55,7 +66,7 @@ export default function WebsiteAnnouncement() {
     }
 
     fetchAnnouncement()
-  }, [])
+  }, [mounted])
 
   useEffect(() => {
     if (isVisible) {
@@ -74,7 +85,8 @@ export default function WebsiteAnnouncement() {
     localStorage.setItem('announcement-dismissed', 'true')
   }
 
-  if (isLoading || !isVisible || !announcement) {
+  // Don't render anything until component has mounted on client to prevent hydration mismatch
+  if (!mounted || isLoading || !isVisible || !announcement) {
     return null
   }
 

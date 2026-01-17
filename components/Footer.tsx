@@ -1,6 +1,7 @@
 import {client} from '@/lib/sanity.client'
 import {footerQuery} from '@/lib/queries'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const revalidate = 3600 // Revalidate every hour
 
@@ -96,6 +97,17 @@ export default async function Footer() {
 
         {/* Copyright and Social Media */}
         <div className="text-center mb-8 pt-8 border-t border-gray-800">
+          {/* Logo and Brand */}
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <Image
+              src="/logo.png"
+              alt="Media Arise"
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain"
+            />
+            <span className="text-xl font-bold text-white">Media Arise</span>
+          </div>
           <p className="text-gray-300 mb-4">{copyright}</p>
           
           {/* Social Media Icons */}
