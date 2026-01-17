@@ -244,3 +244,17 @@ export const programBySlugQuery = groq`
     registrationOpen,
   }
 `
+
+export const aboutPageQuery = groq`
+  *[_type == "aboutPage"][0] {
+    part1Title,
+    part1Subtitle,
+    whoWeAre,
+    mission,
+    vision,
+    story,
+    nameOrigin,
+    part2Title,
+    faqs,
+  }
+`

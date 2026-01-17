@@ -25,7 +25,7 @@ Replace `YOUR_USERNAME` with your GitHub username.
 
 ## Step 2: Deploy to Vercel
 
-1. Go to https://vercel.com and sign up/login with GitHub
+1. Go to https://wvercel.com and sign up/login with GitHub
 2. Click "Add New Project"
 3. Import your repository `media-arise-website`
 4. Vercel will auto-detect Next.js settings (keep defaults)

@@ -11,5 +11,6 @@ import podcast from './podcast'
 import givingPage from './givingPage'
 import program from './program'
 import registration from './registration'
+import aboutPage from './aboutPage'
 
-export const schemaTypes = [fellowshipSession, announcement, event, ministry, contactMessage, sessionRecording, footer, contactPage, pastSermon, podcast, givingPage, program, registration]
+export const schemaTypes = [fellowshipSession, announcement, event, ministry, contactMessage, sessionRecording, footer, contactPage, pastSermon, podcast, givingPage, program, registration, aboutPage]
