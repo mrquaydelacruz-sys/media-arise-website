@@ -8,5 +8,6 @@ import footer from './footer'
 import contactPage from './contactPage'
 import pastSermon from './pastSermon'
 import podcast from './podcast'
+import givingPage from './givingPage'
 
-export const schemaTypes = [fellowshipSession, announcement, event, ministry, contactMessage, sessionRecording, footer, contactPage, pastSermon, podcast]
+export const schemaTypes = [fellowshipSession, announcement, event, ministry, contactMessage, sessionRecording, footer, contactPage, pastSermon, podcast, givingPage]

@@ -161,3 +161,16 @@ export const podcastsQuery = groq`
     isActive,
   }
 `
+
+export const givingPageQuery = groq`
+  *[_type == "givingPage"][0] {
+    title,
+    description,
+    donorboxCampaign,
+    donorboxInterval,
+    whyWeGiveTitle,
+    bibleVerse,
+    bibleVerseReference,
+    whyWeGiveDescription,
+  }
+`
