@@ -24,7 +24,7 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2 animate-navLogo">
             <Image
               src="/logo.png"
               alt="Media Arise"
@@ -34,22 +34,23 @@ export default function Navigation() {
               priority
               unoptimized
             />
-            <span className="text-2xl font-bold text-gray-900">Media Arise</span>
+            <span className="text-2xl font-bold text-gray-900 animate-navTitle">Media Arise</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">
-            {navItems.map((item) => {
+            {navItems.map((item, index) => {
               const isActive = pathname === item.href
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium transition-colors animate-navItem ${
                     isActive
                       ? 'text-black border-b-2 border-black'
                       : 'text-gray-700 hover:text-black'
                   }`}
+                  style={{animationDelay: `${index * 0.05}s`}}
                 >
                   {item.label}
                 </Link>

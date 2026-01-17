@@ -44,37 +44,33 @@ body {
   animation: fadeIn 0.2s ease-out;
 }
 
-/* Homepage entrance animations */
-@keyframes logoEntrance {
+/* Navigation bar entrance animations */
+@keyframes navLogo {
   0% {
     opacity: 0;
-    transform: scale(0.3) rotate(-15deg);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.15) rotate(5deg);
+    transform: translateX(-20px);
   }
   100% {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
+    transform: translateX(0);
   }
 }
 
-@keyframes logoExit {
+@keyframes navTitle {
   0% {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
+    opacity: 0;
+    transform: translateX(-10px);
   }
   100% {
-    opacity: 0;
-    transform: scale(0.7) rotate(15deg);
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-@keyframes contentFadeIn {
+@keyframes navItem {
   0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(-10px);
   }
   100% {
     opacity: 1;
@@ -82,14 +78,16 @@ body {
   }
 }
 
-.animate-logoEntrance {
-  animation: logoEntrance 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+.animate-navLogo {
+  animation: navLogo 0.6s ease-out forwards;
 }
 
-.animate-logoExit {
-  animation: logoExit 0.6s ease-in forwards;
+.animate-navTitle {
+  animation: navTitle 0.6s ease-out 0.1s forwards;
+  opacity: 0;
 }
 
-.animate-contentFadeIn {
-  animation: contentFadeIn 1s ease-out forwards;
+.animate-navItem {
+  animation: navItem 0.5s ease-out forwards;
+  opacity: 0;
 }

@@ -7,7 +7,6 @@ import {
 import FellowshipSection from '@/components/FellowshipSection'
 import AnnouncementsSection from '@/components/AnnouncementsSection'
 import EventsSection from '@/components/EventsSection'
-import HomePageClient from '@/components/HomePageClient'
 
 export const revalidate = 60 // Revalidate every 60 seconds
 
@@ -38,8 +37,7 @@ export default async function Home() {
   const {fellowshipSession, announcements, events} = await getData()
 
   return (
-    <HomePageClient>
-      <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50">
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
           {/* Fellowship Section */}
@@ -132,6 +130,5 @@ export default async function Home() {
           </section>
         </div>
       </main>
-    </HomePageClient>
   )
 }
