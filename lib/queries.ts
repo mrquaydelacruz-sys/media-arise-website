@@ -258,3 +258,10 @@ export const aboutPageQuery = groq`
     faqs,
   }
 `
+
+export const websiteAnnouncementQuery = groq`
+  *[_type == "websiteAnnouncement"][0] {
+    enabled,
+    message,
+  }
+`
