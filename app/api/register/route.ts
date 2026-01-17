@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       status: 'pending',
     })
 
-    // Also push to Google Sheets
+    // Also push to Google Sheets (with Sanity ID for two-way sync)
     await appendToGoogleSheet({
       programTitle: programTitle || 'Unknown Program',
       firstName,
@@ -66,6 +66,7 @@ export async function POST(request: NextRequest) {
       convenientTime: convenientTime || '',
       registeredAt,
       status: 'pending',
+      sanityId: registration._id,
     })
 
     return NextResponse.json(

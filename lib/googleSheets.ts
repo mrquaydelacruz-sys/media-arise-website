@@ -38,7 +38,7 @@ interface RegistrationData {
   status: string
 }
 
-export async function appendToGoogleSheet(data: RegistrationData) {
+export async function appendToGoogleSheet(data: RegistrationData & {sanityId?: string}) {
   const spreadsheetId = process.env.GOOGLE_SHEET_ID
 
   if (!spreadsheetId) {
@@ -58,7 +58,7 @@ export async function appendToGoogleSheet(data: RegistrationData) {
       minute: '2-digit',
     })
 
-    // Prepare row data
+    // Prepare row data (added Sanity ID as column L for syncing)
     const rowData = [
       formattedDate,
       data.programTitle,
@@ -71,12 +71,13 @@ export async function appendToGoogleSheet(data: RegistrationData) {
       data.convenientTime || '',
       data.additionalInfo || '',
       data.status,
+      data.sanityId || '', // Column L - Sanity ID for syncing
     ]
 
     // Append to sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:K', // Adjust range if needed
+      range: 'Sheet1!A:L',
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [rowData],
@@ -87,5 +88,57 @@ export async function appendToGoogleSheet(data: RegistrationData) {
   } catch (error) {
     console.error('Error appending to Google Sheet:', error)
     return {success: false, error: 'Failed to add to spreadsheet'}
+  }
+}
+
+// Find row by Sanity ID and update status
+export async function updateRegistrationStatus(sanityId: string, newStatus: string) {
+  const spreadsheetId = process.env.GOOGLE_SHEET_ID
+
+  if (!spreadsheetId) {
+    console.error('GOOGLE_SHEET_ID not configured')
+    return {success: false, error: 'Google Sheet not configured'}
+  }
+
+  try {
+    const sheets = await getGoogleSheets()
+
+    // Get all data to find the row with matching Sanity ID
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Sheet1!A:L',
+    })
+
+    const rows = response.data.values || []
+
+    // Find the row with matching Sanity ID (column L, index 11)
+    let rowIndex = -1
+    for (let i = 1; i < rows.length; i++) { // Start at 1 to skip header
+      if (rows[i][11] === sanityId) {
+        rowIndex = i + 1 // +1 because sheets are 1-indexed
+        break
+      }
+    }
+
+    if (rowIndex === -1) {
+      console.log(`Registration with Sanity ID ${sanityId} not found in Google Sheet`)
+      return {success: false, error: 'Registration not found in spreadsheet'}
+    }
+
+    // Update the status column (column K, index 10)
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `Sheet1!K${rowIndex}`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values: [[newStatus]],
+      },
+    })
+
+    console.log(`Updated status for Sanity ID ${sanityId} to ${newStatus} in row ${rowIndex}`)
+    return {success: true}
+  } catch (error) {
+    console.error('Error updating Google Sheet:', error)
+    return {success: false, error: 'Failed to update spreadsheet'}
   }
 }
