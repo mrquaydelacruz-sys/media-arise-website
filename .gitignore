@@ -38,3 +38,6 @@ next-env.d.ts
 # sanity
 .sanity
 sanity/node_modules
+
+# google cloud credentials
+google-cloud/
