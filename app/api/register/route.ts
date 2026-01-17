@@ -12,7 +12,7 @@ const client = createClient({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const {firstName, lastName, email, phone, reason, additionalInfo, programId, programTitle} = body
+    const {firstName, lastName, email, phone, reason, additionalInfo, hearAbout, convenientTime, programId, programTitle} = body
 
     // Validate required fields
     if (!firstName || !lastName || !email || !reason || !programId) {
@@ -44,6 +44,8 @@ export async function POST(request: NextRequest) {
       phone: phone || '',
       reason,
       additionalInfo: additionalInfo || '',
+      hearAbout: hearAbout || '',
+      convenientTime: convenientTime || '',
       registeredAt: new Date().toISOString(),
       status: 'pending',
     })

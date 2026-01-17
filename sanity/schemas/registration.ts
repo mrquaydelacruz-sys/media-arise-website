@@ -49,6 +49,19 @@ export default defineType({
       rows: 3,
     }),
     defineField({
+      name: 'hearAbout',
+      title: 'Where did you hear about this leadership course?',
+      type: 'text',
+      rows: 2,
+      description: 'How did you learn about this program?',
+    }),
+    defineField({
+      name: 'convenientTime',
+      title: 'What is your most convenient time of the day to join online?',
+      type: 'string',
+      description: 'Please specify your preferred time (e.g., Morning, Afternoon, Evening)',
+    }),
+    defineField({
       name: 'registeredAt',
       title: 'Registered At',
       type: 'datetime',

@@ -44,6 +44,8 @@ export default function RegisterContent({programs}: RegisterContentProps) {
     phone: '',
     reason: '',
     additionalInfo: '',
+    hearAbout: '',
+    convenientTime: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -89,6 +91,8 @@ export default function RegisterContent({programs}: RegisterContentProps) {
           phone: '',
           reason: '',
           additionalInfo: '',
+          hearAbout: '',
+          convenientTime: '',
         })
       } else {
         setSubmitStatus('error')
@@ -315,6 +319,38 @@ export default function RegisterContent({programs}: RegisterContentProps) {
                           rows={2}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                           placeholder="Any other details you'd like to share..."
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="hearAbout" className="block text-sm font-medium text-gray-700 mb-1">
+                          Where did you hear about this leadership course? *
+                        </label>
+                        <textarea
+                          id="hearAbout"
+                          name="hearAbout"
+                          value={formData.hearAbout}
+                          onChange={handleChange}
+                          required
+                          rows={2}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                          placeholder="e.g., Social media, friend, church, website..."
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="convenientTime" className="block text-sm font-medium text-gray-700 mb-1">
+                          What is your most convenient time of the day to join online? *
+                        </label>
+                        <input
+                          type="text"
+                          id="convenientTime"
+                          name="convenientTime"
+                          value={formData.convenientTime}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                          placeholder="e.g., Morning (9am-12pm), Afternoon (12pm-5pm), Evening (5pm-9pm)"
                         />
                       </div>
 

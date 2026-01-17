@@ -1,9 +1,12 @@
 import {DocumentActionComponent} from 'sanity'
 import {DownloadIcon} from '@sanity/icons'
+import {createClient} from '@sanity/client'
 
 export const exportRegistrationPDF: DocumentActionComponent = (props) => {
   // Only show for registration documents (double-check since we filter in config)
-  if (props.schemaType !== 'registration') {
+  // Access schemaType from props with type assertion since types might be incomplete
+  const schemaType = (props as any).schemaType
+  if (schemaType !== 'registration') {
     return null
   }
 
@@ -16,8 +19,16 @@ export const exportRegistrationPDF: DocumentActionComponent = (props) => {
         // Dynamically import jsPDF to avoid bundling issues
         const {default: jsPDF} = await import('jspdf')
 
+        // Create client with project details (use hardcoded values for now)
+        const client = createClient({
+          projectId: '1bny7eub',
+          dataset: 'production',
+          apiVersion: '2024-01-01',
+          useCdn: false,
+        })
+        
         // Fetch the full document with all referenced data
-        const doc = await props.getClient({apiVersion: '2024-01-01'}).fetch(
+        const doc = await client.fetch(
           `*[_id == $id][0]{
             _id,
             firstName,
@@ -26,6 +37,8 @@ export const exportRegistrationPDF: DocumentActionComponent = (props) => {
             phone,
             reason,
             additionalInfo,
+            hearAbout,
+            convenientTime,
             registeredAt,
             status,
             adminNotes,
@@ -38,11 +51,11 @@ export const exportRegistrationPDF: DocumentActionComponent = (props) => {
               registrationDeadline
             }
           }`,
-          {id: props.id}
+          {id: (props as any).id}
         )
 
         if (!doc) {
-          props.onComplete()
+          ;(props as any).onComplete()
           return
         }
 
@@ -199,6 +212,38 @@ export const exportRegistrationPDF: DocumentActionComponent = (props) => {
           yPosition += 10
         }
 
+        // Where did you hear about this course Section
+        if (doc.hearAbout) {
+          pdf.setFontSize(16)
+          pdf.setFont('helvetica', 'bold')
+          pdf.text('Where did you hear about this leadership course?', margin, yPosition)
+          yPosition += 10
+
+          pdf.setFontSize(12)
+          pdf.setFont('helvetica', 'normal')
+          yPosition = addText(doc.hearAbout, margin, yPosition, pageWidth - 2 * margin, 12)
+
+          yPosition += 5
+          pdf.line(margin, yPosition, pageWidth - margin, yPosition)
+          yPosition += 10
+        }
+
+        // Most convenient time Section
+        if (doc.convenientTime) {
+          pdf.setFontSize(16)
+          pdf.setFont('helvetica', 'bold')
+          pdf.text('Most Convenient Time to Join Online', margin, yPosition)
+          yPosition += 10
+
+          pdf.setFontSize(12)
+          pdf.setFont('helvetica', 'normal')
+          yPosition = addText(doc.convenientTime, margin, yPosition, pageWidth - 2 * margin, 12)
+
+          yPosition += 5
+          pdf.line(margin, yPosition, pageWidth - margin, yPosition)
+          yPosition += 10
+        }
+
         // Admin Notes Section (if present)
         if (doc.adminNotes) {
           // Check if we need a new page
@@ -247,11 +292,11 @@ export const exportRegistrationPDF: DocumentActionComponent = (props) => {
         // Save PDF
         pdf.save(filename)
 
-        props.onComplete()
+        ;(props as any).onComplete()
       } catch (error) {
         console.error('Error generating PDF:', error)
         alert('Error generating PDF. Please try again.')
-        props.onComplete()
+        ;(props as any).onComplete()
       }
     },
   }
