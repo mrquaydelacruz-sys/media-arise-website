@@ -2,6 +2,7 @@
 
 import {useState} from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import {urlFor} from '@/lib/sanity.image'
 
 interface Program {
@@ -49,12 +50,10 @@ export default function RegisterContent({programs}: RegisterContentProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [participantLink, setParticipantLink] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
   const [lookupEmail, setLookupEmail] = useState('')
   const [lookupLastName, setLookupLastName] = useState('')
   const [lookupStatus, setLookupStatus] = useState<'idle' | 'loading' | 'success' | 'notfound' | 'error'>('idle')
   const [lookupResults, setLookupResults] = useState<{registrationId: string; programTitle: string}[]>([])
-  const [copiedLookupId, setCopiedLookupId] = useState<string | null>(null)
 
   const handleProgramSelect = (program: Program) => {
     setSelectedProgram(program)
@@ -156,19 +155,6 @@ export default function RegisterContent({programs}: RegisterContentProps) {
     }
   }
 
-  const copyLookupLink = async (registrationId: string) => {
-    if (typeof window === 'undefined') return
-    const url = `${window.location.origin}/register/participant?id=${registrationId}`
-    try {
-      await navigator.clipboard.writeText(url)
-      setCopiedLookupId(registrationId)
-      setTimeout(() => setCopiedLookupId(null), 2000)
-    } catch {
-      setCopiedLookupId(registrationId)
-      setTimeout(() => setCopiedLookupId(null), 2000)
-    }
-  }
-
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -181,7 +167,7 @@ export default function RegisterContent({programs}: RegisterContentProps) {
         <div className="mb-8 bg-white rounded-lg shadow border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Already registered?</h2>
           <p className="text-gray-600 text-sm mb-4">
-            Get your participant link to view session recaps and your attendance. Use the same email you used when you registered.
+            Enter your email to go to your participant page and view session recaps and attendance. Use the same email you used when you registered.
           </p>
           <form onSubmit={handleLookupSubmit} className="flex flex-wrap gap-3 items-end">
             <div className="flex-1 min-w-[200px]">
@@ -216,7 +202,7 @@ export default function RegisterContent({programs}: RegisterContentProps) {
               disabled={lookupStatus === 'loading'}
               className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {lookupStatus === 'loading' ? 'Looking up...' : 'Get my participant link'}
+              {lookupStatus === 'loading' ? 'Looking up...' : 'Go to my participant page'}
             </button>
           </form>
           {lookupStatus === 'notfound' && (
@@ -229,17 +215,19 @@ export default function RegisterContent({programs}: RegisterContentProps) {
           )}
           {lookupStatus === 'success' && lookupResults.length > 0 && (
             <div className="mt-4 space-y-3">
-              <p className="text-sm font-medium text-gray-800">Your participant link(s):</p>
+              <p className="text-sm font-medium text-gray-800">Click below to go to your participant page:</p>
               {lookupResults.map(({ registrationId, programTitle }) => (
                 <div key={registrationId} className="flex flex-wrap gap-2 items-center p-3 bg-gray-50 rounded-lg">
                   <span className="text-sm text-gray-700 flex-1 min-w-0 truncate">{programTitle}</span>
-                  <button
-                    type="button"
-                    onClick={() => copyLookupLink(registrationId)}
-                    className="px-3 py-1.5 bg-gray-800 text-white text-sm font-medium rounded hover:bg-gray-700 whitespace-nowrap"
+                  <Link
+                    href={`/register/participant?id=${registrationId}`}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-700 whitespace-nowrap transition-colors"
                   >
-                    {copiedLookupId === registrationId ? 'Copied!' : 'Copy link'}
-                  </button>
+                    View session recaps & attendance
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -345,35 +333,19 @@ export default function RegisterContent({programs}: RegisterContentProps) {
                       <h3 className="text-lg font-semibold mb-2">Registration Successful!</h3>
                       <p className="mb-4">Thank you for registering. We will be in touch soon.</p>
                       {participantLink && (
-                        <div className="mb-4 p-3 bg-white/60 rounded-lg text-left">
-                          <p className="text-sm font-medium text-gray-800 mb-2">
-                            Save this link to access session recaps and your attendance:
+                        <div className="mb-4">
+                          <p className="text-sm font-medium text-gray-800 mb-3">
+                            Go to your participant page to view session recaps and attendance:
                           </p>
-                          <div className="flex gap-2">
-                            <input
-                              type="text"
-                              readOnly
-                              value={participantLink}
-                              className="flex-1 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg"
-                            />
-                            <button
-                              type="button"
-                              onClick={async () => {
-                                try {
-                                  await navigator.clipboard.writeText(participantLink)
-                                  setCopied(true)
-                                  setTimeout(() => setCopied(false), 2000)
-                                } catch {
-                                  // fallback: select and show copied state is best-effort
-                                  setCopied(true)
-                                  setTimeout(() => setCopied(false), 2000)
-                                }
-                              }}
-                              className="px-3 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-700 whitespace-nowrap"
-                            >
-                              {copied ? 'Copied!' : 'Copy link'}
-                            </button>
-                          </div>
+                          <Link
+                            href={participantLink}
+                            className="inline-flex items-center gap-2 px-5 py-3 bg-gray-800 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors"
+                          >
+                            View session recaps & attendance
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                          </Link>
                         </div>
                       )}
                       <button
