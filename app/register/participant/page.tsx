@@ -1,22 +1,15 @@
 import {client} from '@/lib/sanity.client'
 import {registrationForParticipantQuery} from '@/lib/queries'
 import Link from 'next/link'
-import {format} from 'date-fns'
+import SessionCard from './SessionCard'
 
 export const metadata = {
   title: 'Participant - Session Recaps & Attendance | Media Arise',
-  description: 'View session recaps and your attendance for your program.',
+  description: 'View session recaps and attendance for your program.',
 }
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
-
-function getYouTubeId(url: string | undefined): string | null {
-  if (!url) return null
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
-  const match = url.match(regExp)
-  return match && match[2].length === 11 ? match[2] : null
-}
 
 async function getParticipantData(id: string | undefined) {
   if (!id) return null
@@ -60,7 +53,7 @@ export default async function ParticipantPage({
 
   const program = registration.program
   const sessions = program.sessions || []
-  const registrationId = registration._id
+  const allRegistrants = program.allRegistrants || []
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -68,7 +61,7 @@ export default async function ParticipantPage({
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">{program.title}</h1>
           <p className="text-gray-600">
-            Session recaps and your attendance. Welcome, {registration.firstName}.
+            Session recaps and attendance. Welcome, {registration.firstName}.
           </p>
         </div>
 
@@ -80,60 +73,14 @@ export default async function ParticipantPage({
           </div>
         ) : (
           <div className="space-y-8">
-            {sessions.map((session: {label?: string; sessionDate?: string; recapYoutubeUrl?: string; attendedIds?: string[]}, index: number) => {
-              const attended = Array.isArray(session.attendedIds) && session.attendedIds.includes(registrationId)
-              const videoId = getYouTubeId(session.recapYoutubeUrl)
-
-              return (
-                <section
-                  key={index}
-                  className="bg-white rounded-lg shadow-lg overflow-hidden"
-                >
-                  <div className="p-6 border-b border-gray-100">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="text-xl font-semibold text-gray-900">{session.label || `Session ${index + 1}`}</h2>
-                      {session.sessionDate && (
-                        <span className="text-sm text-gray-500">
-                          {format(new Date(session.sessionDate), 'MMM d, yyyy')}
-                        </span>
-                      )}
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
-                          attended ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
-                        }`}
-                      >
-                        {attended ? 'You attended ✓' : 'You did not attend'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {videoId && (
-                    <div className="aspect-video bg-black">
-                      <iframe
-                        title={session.label ? `Recap: ${session.label}` : 'Session recap'}
-                        src={`https://www.youtube.com/embed/${videoId}`}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    </div>
-                  )}
-
-                  {!videoId && session.recapYoutubeUrl && (
-                    <div className="p-6">
-                      <a
-                        href={session.recapYoutubeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        Watch recap on YouTube →
-                      </a>
-                    </div>
-                  )}
-                </section>
-              )
-            })}
+            {sessions.map((session: {label?: string; sessionDate?: string; recapYoutubeUrl?: string; attended?: {_id: string; firstName?: string; lastName?: string}[]}, index: number) => (
+              <SessionCard
+                key={index}
+                session={session}
+                allRegistrants={allRegistrants}
+                index={index}
+              />
+            ))}
           </div>
         )}
 
