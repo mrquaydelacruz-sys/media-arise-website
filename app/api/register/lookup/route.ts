@@ -30,11 +30,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const lastNameParam =
+      lastName && typeof lastName === 'string' && lastName.trim() ? lastName.trim() : null
+
     const registrations = await client.fetch(registrationsByEmailQuery, {
       email: trimmedEmail,
-      ...(lastName && typeof lastName === 'string' && lastName.trim()
-        ? {lastName: lastName.trim()}
-        : {}),
+      lastName: lastNameParam,
     })
 
     if (!registrations || registrations.length === 0) {
