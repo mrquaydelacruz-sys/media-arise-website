@@ -108,6 +108,69 @@ export default defineType({
       description: 'Higher number = shown first',
       initialValue: 0,
     }),
+    defineField({
+      name: 'sessions',
+      title: 'Sessions / Days',
+      type: 'array',
+      description: 'Add sessions (e.g. Day 1, Day 2) with recap videos and attendance. Registrants can view recaps and their attendance on the participant page.',
+      of: [
+        {
+          type: 'object',
+          name: 'programSession',
+          title: 'Session',
+          fields: [
+            {
+              name: 'label',
+              title: 'Session Label',
+              type: 'string',
+              description: 'e.g. "Day 1", "Day 2", "Session 1"',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'sessionDate',
+              title: 'Session Date',
+              type: 'datetime',
+              description: 'When this session took place',
+            },
+            {
+              name: 'recapYoutubeUrl',
+              title: 'Recap YouTube URL',
+              type: 'url',
+              description: 'YouTube link to the recording. Shown to registrants after the meeting is recorded.',
+            },
+            {
+              name: 'attended',
+              title: 'Who Attended',
+              type: 'array',
+              description: 'Select the registrations for people who attended this session',
+              of: [
+                {
+                  type: 'reference',
+                  to: [{type: 'registration'}],
+                  options: {
+                    filter: ({document}) => {
+                      const programId = document?._id
+                      if (!programId) return true
+                      return {filter: 'program._ref == $programId', params: {programId}}
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+          preview: {
+            select: {label: 'label', sessionDate: 'sessionDate'},
+            prepare({label, sessionDate}) {
+              const date = sessionDate ? new Date(sessionDate).toLocaleDateString() : ''
+              return {
+                title: label || 'Session',
+                subtitle: date,
+              }
+            },
+          },
+        },
+      ],
+    }),
   ],
   preview: {
     select: {
