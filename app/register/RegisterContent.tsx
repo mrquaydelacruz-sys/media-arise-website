@@ -3,7 +3,6 @@
 import {useState} from 'react'
 import Image from 'next/image'
 import {urlFor} from '@/lib/sanity.image'
-import {format} from 'date-fns'
 
 interface Program {
   _id: string
@@ -119,7 +118,8 @@ export default function RegisterContent({programs}: RegisterContentProps) {
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'MMM d, yyyy')
+      const d = new Date(dateString)
+      return d.toLocaleDateString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric' })
     } catch {
       return dateString
     }
