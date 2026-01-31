@@ -149,9 +149,13 @@ export default defineType({
                   to: [{type: 'registration'}],
                   options: {
                     filter: ({document}) => {
+                      // When reference is inside sessions[], document may be the Program (root) or undefined during init
                       const programId = document?._id
-                      if (!programId) return true
-                      return {filter: 'program._ref == $programId', params: {programId}}
+                      if (programId) {
+                        return {filter: 'program._ref == $programId', params: {programId}}
+                      }
+                      // No program context (e.g. new doc or nested context): show all registrations so dropdown works
+                      return {filter: "_type == 'registration'", params: {}}
                     },
                   },
                 },
