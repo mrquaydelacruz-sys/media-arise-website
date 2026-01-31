@@ -142,22 +142,13 @@ export default defineType({
               name: 'attended',
               title: 'Who Attended',
               type: 'array',
-              description: 'Select the registrations for people who attended this session',
+              description: 'Select the registrations for people who attended this session. Only add registrations that belong to this program.',
               of: [
                 {
                   type: 'reference',
                   to: [{type: 'registration'}],
-                  options: {
-                    filter: ({document}) => {
-                      // When reference is inside sessions[], document may be the Program (root) or undefined during init
-                      const programId = document?._id
-                      if (programId) {
-                        return {filter: 'program._ref == $programId', params: {programId}}
-                      }
-                      // No program context (e.g. new doc or nested context): show all registrations so dropdown works
-                      return {filter: "_type == 'registration'", params: {}}
-                    },
-                  },
+                  // No filter: nested reference filter often gets wrong context in Studio and shows "No results".
+                  // All registrations will appear; pick only those for this program.
                 },
               ],
             },
