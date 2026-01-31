@@ -288,6 +288,7 @@ export const registrationForParticipantQuery = groq`
 export const registrationsByEmailQuery = groq`
   *[_type == "registration" && email == $email && status != "rejected" && ($lastName == null || $lastName == "" || lastName == $lastName)] | order(registeredAt desc) {
     _id,
+    "programId": program._ref,
     "programTitle": program->.title
   }
 `

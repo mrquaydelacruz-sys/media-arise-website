@@ -45,8 +45,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // One link per program (keep most recent registration per program)
+    const seenProgramIds = new Set<string>()
+    const deduped = registrations.filter((r: {_id: string; programId?: string; programTitle?: string}) => {
+      const programId = r.programId || r._id
+      if (seenProgramIds.has(programId)) return false
+      seenProgramIds.add(programId)
+      return true
+    })
+
     return NextResponse.json({
-      registrations: registrations.map((r: {_id: string; programTitle?: string}) => ({
+      registrations: deduped.map((r: {_id: string; programTitle?: string}) => ({
         registrationId: r._id,
         programTitle: r.programTitle || 'Program',
       })),
