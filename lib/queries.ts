@@ -265,3 +265,29 @@ export const websiteAnnouncementQuery = groq`
     message,
   }
 `
+
+export const registrationForParticipantQuery = groq`
+  *[_type == "registration" && _id == $id][0] {
+    _id,
+    firstName,
+    lastName,
+    program-> {
+      _id,
+      title,
+      slug,
+      sessions[] {
+        label,
+        sessionDate,
+        recapYoutubeUrl,
+        "attendedIds": attended[]._ref
+      }
+    }
+  }
+`
+
+export const registrationsByEmailQuery = groq`
+  *[_type == "registration" && email == $email && status != "rejected" && (!defined($lastName) || lastName == $lastName)] | order(registeredAt desc) {
+    _id,
+    "programTitle": program->.title
+  }
+`

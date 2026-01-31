@@ -49,6 +49,13 @@ export default function RegisterContent({programs}: RegisterContentProps) {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [participantLink, setParticipantLink] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [lookupEmail, setLookupEmail] = useState('')
+  const [lookupLastName, setLookupLastName] = useState('')
+  const [lookupStatus, setLookupStatus] = useState<'idle' | 'loading' | 'success' | 'notfound' | 'error'>('idle')
+  const [lookupResults, setLookupResults] = useState<{registrationId: string; programTitle: string}[]>([])
+  const [copiedLookupId, setCopiedLookupId] = useState<string | null>(null)
 
   const handleProgramSelect = (program: Program) => {
     setSelectedProgram(program)
@@ -83,6 +90,11 @@ export default function RegisterContent({programs}: RegisterContentProps) {
       })
 
       if (response.ok) {
+        const data = await response.json()
+        const regId = data?.registrationId
+        if (regId && typeof window !== 'undefined') {
+          setParticipantLink(`${window.location.origin}/register/participant?id=${regId}`)
+        }
         setSubmitStatus('success')
         setFormData({
           firstName: '',
@@ -113,6 +125,50 @@ export default function RegisterContent({programs}: RegisterContentProps) {
     }
   }
 
+  const handleLookupSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!lookupEmail.trim()) return
+    setLookupStatus('loading')
+    setLookupResults([])
+    try {
+      const response = await fetch('/api/register/lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: lookupEmail.trim(),
+          ...(lookupLastName.trim() ? { lastName: lookupLastName.trim() } : {}),
+        }),
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        setLookupStatus('error')
+        return
+      }
+      const regs = data?.registrations || []
+      if (regs.length === 0) {
+        setLookupStatus('notfound')
+        return
+      }
+      setLookupResults(regs)
+      setLookupStatus('success')
+    } catch {
+      setLookupStatus('error')
+    }
+  }
+
+  const copyLookupLink = async (registrationId: string) => {
+    if (typeof window === 'undefined') return
+    const url = `${window.location.origin}/register/participant?id=${registrationId}`
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopiedLookupId(registrationId)
+      setTimeout(() => setCopiedLookupId(null), 2000)
+    } catch {
+      setCopiedLookupId(registrationId)
+      setTimeout(() => setCopiedLookupId(null), 2000)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -120,6 +176,75 @@ export default function RegisterContent({programs}: RegisterContentProps) {
         <p className="text-gray-700 mb-8">
           Join one of our programs or activities. Select a program below to register.
         </p>
+
+        {/* Already registered? Get participant link */}
+        <div className="mb-8 bg-white rounded-lg shadow border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">Already registered?</h2>
+          <p className="text-gray-600 text-sm mb-4">
+            Get your participant link to view session recaps and your attendance. Use the same email you used when you registered.
+          </p>
+          <form onSubmit={handleLookupSubmit} className="flex flex-wrap gap-3 items-end">
+            <div className="flex-1 min-w-[200px]">
+              <label htmlFor="lookup-email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email *
+              </label>
+              <input
+                type="email"
+                id="lookup-email"
+                value={lookupEmail}
+                onChange={(e) => setLookupEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              />
+            </div>
+            <div className="flex-1 min-w-[160px]">
+              <label htmlFor="lookup-lastname" className="block text-sm font-medium text-gray-700 mb-1">
+                Last name (optional)
+              </label>
+              <input
+                type="text"
+                id="lookup-lastname"
+                value={lookupLastName}
+                onChange={(e) => setLookupLastName(e.target.value)}
+                placeholder="Narrows results"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={lookupStatus === 'loading'}
+              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {lookupStatus === 'loading' ? 'Looking up...' : 'Get my participant link'}
+            </button>
+          </form>
+          {lookupStatus === 'notfound' && (
+            <p className="mt-4 text-amber-700 text-sm">
+              No registration found for this email. Use the exact email you used when you registered.
+            </p>
+          )}
+          {lookupStatus === 'error' && (
+            <p className="mt-4 text-red-600 text-sm">Something went wrong. Please try again.</p>
+          )}
+          {lookupStatus === 'success' && lookupResults.length > 0 && (
+            <div className="mt-4 space-y-3">
+              <p className="text-sm font-medium text-gray-800">Your participant link(s):</p>
+              {lookupResults.map(({ registrationId, programTitle }) => (
+                <div key={registrationId} className="flex flex-wrap gap-2 items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-700 flex-1 min-w-0 truncate">{programTitle}</span>
+                  <button
+                    type="button"
+                    onClick={() => copyLookupLink(registrationId)}
+                    className="px-3 py-1.5 bg-gray-800 text-white text-sm font-medium rounded hover:bg-gray-700 whitespace-nowrap"
+                  >
+                    {copiedLookupId === registrationId ? 'Copied!' : 'Copy link'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {programs.length === 0 ? (
           <div className="bg-white rounded-lg shadow-lg p-8 text-center">
@@ -218,13 +343,46 @@ export default function RegisterContent({programs}: RegisterContentProps) {
                         />
                       </svg>
                       <h3 className="text-lg font-semibold mb-2">Registration Successful!</h3>
-                      <p>Thank you for registering. We will be in touch soon.</p>
+                      <p className="mb-4">Thank you for registering. We will be in touch soon.</p>
+                      {participantLink && (
+                        <div className="mb-4 p-3 bg-white/60 rounded-lg text-left">
+                          <p className="text-sm font-medium text-gray-800 mb-2">
+                            Save this link to access session recaps and your attendance:
+                          </p>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              readOnly
+                              value={participantLink}
+                              className="flex-1 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                try {
+                                  await navigator.clipboard.writeText(participantLink)
+                                  setCopied(true)
+                                  setTimeout(() => setCopied(false), 2000)
+                                } catch {
+                                  // fallback: select and show copied state is best-effort
+                                  setCopied(true)
+                                  setTimeout(() => setCopied(false), 2000)
+                                }
+                              }}
+                              className="px-3 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-700 whitespace-nowrap"
+                            >
+                              {copied ? 'Copied!' : 'Copy link'}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                       <button
                         onClick={() => {
                           setSelectedProgram(null)
                           setSubmitStatus('idle')
+                          setParticipantLink(null)
                         }}
-                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                       >
                         Register for Another Program
                       </button>
