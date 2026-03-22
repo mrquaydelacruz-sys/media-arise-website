@@ -275,12 +275,12 @@ export const registrationForParticipantQuery = groq`
       _id,
       title,
       slug,
-      "allRegistrants": *[_type == "registration" && program._ref == ^._id] { _id, firstName, lastName },
+      "allRegistrants": *[_type == "registration" && program._ref == ^._id && (excludeFromAttendance != true)] { _id, firstName, lastName },
       sessions[] {
         label,
         sessionDate,
         recapYoutubeUrl,
-        "attended": attended[]-> { _id, firstName, lastName }
+        "attended": attended[]-> { _id, firstName, lastName, excludeFromAttendance }
       }
     }
   }

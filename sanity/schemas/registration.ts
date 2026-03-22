@@ -88,6 +88,13 @@ export default defineType({
       rows: 3,
       description: 'Internal notes (not visible to registrant)',
     }),
+    defineField({
+      name: 'excludeFromAttendance',
+      title: 'Exclude from attendance lists',
+      type: 'boolean',
+      description: 'Check to hide this registration from Attended/Absent lists on the participant page (e.g. test or duplicate entries). They will not appear in who attended or who was absent.',
+      initialValue: false,
+    }),
   ],
   preview: {
     select: {

@@ -10,7 +10,7 @@ function getYouTubeId(url: string | undefined): string | null {
   return match && match[2].length === 11 ? match[2] : null
 }
 
-type Person = {_id: string; firstName?: string; lastName?: string}
+type Person = {_id: string; firstName?: string; lastName?: string; excludeFromAttendance?: boolean}
 
 interface SessionCardProps {
   session: {
@@ -26,7 +26,8 @@ interface SessionCardProps {
 export default function SessionCard({session, allRegistrants, index}: SessionCardProps) {
   const [showAttendees, setShowAttendees] = useState(false)
   const videoId = getYouTubeId(session.recapYoutubeUrl)
-  const attended = session.attended || []
+  const attendedRaw = session.attended || []
+  const attended = attendedRaw.filter((p) => p.excludeFromAttendance !== true)
   const attendedIds = new Set(attended.map((p) => p._id))
   const absent = allRegistrants.filter((r) => !attendedIds.has(r._id))
 
