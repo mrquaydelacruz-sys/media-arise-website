@@ -1,3 +1,5 @@
+import type {NextRequest} from 'next/server'
+
 /** Canonical production URL (no trailing slash). Used for OG metadata and Stripe redirects. */
 export const OFFICIAL_SITE_URL = 'https://mediaarise.com' as const
 
@@ -34,4 +36,56 @@ export function getPublicSiteUrl(): string {
   }
 
   return ''
+}
+
+const CHECKOUT_ALLOWED_HOSTS = new Set([
+  'localhost',
+  '127.0.0.1',
+  'mediaarise.com',
+  'www.mediaarise.com',
+])
+
+function isAllowedCheckoutHost(hostname: string): boolean {
+  if (CHECKOUT_ALLOWED_HOSTS.has(hostname)) return true
+  if (hostname.endsWith('.vercel.app')) return true
+  return false
+}
+
+/**
+ * Base URL for Stripe success/cancel redirects. Prefer the browser's Origin so the return
+ * host matches where the donor started (avoids www vs apex 404s and wrong-deployment hosts).
+ */
+export function resolveCheckoutSiteUrl(request: NextRequest): string {
+  const origin = request.headers.get('origin')
+  if (origin) {
+    try {
+      const u = new URL(origin)
+      if (
+        isAllowedCheckoutHost(u.hostname) &&
+        (u.protocol === 'https:' || u.protocol === 'http:')
+      ) {
+        return origin.replace(/\/$/, '')
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+  const referer = request.headers.get('referer')
+  if (referer) {
+    try {
+      const u = new URL(referer)
+      const okHttp =
+        u.protocol === 'http:' &&
+        (u.hostname === 'localhost' || u.hostname === '127.0.0.1')
+      if (
+        isAllowedCheckoutHost(u.hostname) &&
+        (u.protocol === 'https:' || okHttp)
+      ) {
+        return `${u.protocol}//${u.host}`.replace(/\/$/, '')
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+  return getPublicSiteUrl()
 }

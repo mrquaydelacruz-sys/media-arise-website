@@ -1,23 +1,18 @@
 import {NextRequest, NextResponse} from 'next/server'
 import Stripe from 'stripe'
 import {MEDIA_ARISE_INITIATIVE} from '@/lib/fellowship-donation'
-
-function getStripe() {
-  const secretKey = process.env.STRIPE_SECRET_KEY
-  if (!secretKey) {
-    throw new Error('STRIPE_SECRET_KEY is not configured')
-  }
-  return new Stripe(secretKey, {
-    apiVersion: '2026-02-25.clover',
-  })
-}
+import {getStripeServer} from '@/lib/stripe-server'
 
 /**
  * Register this URL in Stripe Dashboard → Webhooks.
  * Use the signing secret for this endpoint as STRIPE_WEBHOOK_SECRET (never commit it).
  */
 export async function POST(request: NextRequest) {
-  const stripe = getStripe()
+  const stripe = getStripeServer()
+  if (!stripe) {
+    console.error('[stripe/webhook] STRIPE_SECRET_KEY missing')
+    return NextResponse.json({error: 'Server misconfigured'}, {status: 500})
+  }
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 

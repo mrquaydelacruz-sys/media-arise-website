@@ -1,19 +1,13 @@
 import {NextRequest, NextResponse} from 'next/server'
-import Stripe from 'stripe'
 import {
   CHECKOUT_PRODUCT_DESCRIPTION,
   CHECKOUT_PRODUCT_NAME,
   fellowshipDonationMetadata,
 } from '@/lib/fellowship-donation'
-import {getPublicSiteUrl, STRIPE_CHECKOUT_DISPLAY_NAME} from '@/lib/site-url'
+import {getStripeServer} from '@/lib/stripe-server'
+import {resolveCheckoutSiteUrl, STRIPE_CHECKOUT_DISPLAY_NAME} from '@/lib/site-url'
 
 const isDev = process.env.NODE_ENV === 'development'
-
-function getStripe(secretKey: string) {
-  return new Stripe(secretKey, {
-    apiVersion: '2026-02-25.clover',
-  })
-}
 
 /** Avoid exposing env/config details to donors (security + UX). */
 function safeCheckoutError(internalHint: string, devMessage: string) {
@@ -33,14 +27,13 @@ const MAX_CENTS = 1_000_000_00
 
 export async function POST(request: NextRequest) {
   try {
-    const secretKey = process.env.STRIPE_SECRET_KEY?.trim()
-    if (!secretKey) {
+    const stripe = getStripeServer()
+    if (!stripe) {
       return safeCheckoutError(
         'STRIPE_SECRET_KEY missing',
         'STRIPE_SECRET_KEY is not configured — add it to .env.local (see .env.example).',
       )
     }
-    const stripe = getStripe(secretKey)
     const body = await request.json()
     const amountCents = Math.round(Number(body.amountCents))
     const currency = String(
@@ -59,7 +52,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({error: 'Amount is too large'}, {status: 400})
     }
 
-    const siteUrl = getPublicSiteUrl()
+    const siteUrl = resolveCheckoutSiteUrl(request)
     if (!siteUrl) {
       return safeCheckoutError(
         'Public site URL missing (NEXT_PUBLIC_SITE_URL or VERCEL_URL)',
