@@ -61,8 +61,11 @@ export default function DonateForm({currency}: DonateFormProps) {
       className="mx-auto max-w-md rounded-lg border border-gray-200 bg-white p-8 shadow-lg"
     >
       <p className="mb-6 text-sm leading-relaxed text-gray-600">
-        Gifts are processed securely by Stripe. Your payment details are handled only by Stripe,
-        not stored on this site.
+        Your gift supports <strong className="font-semibold text-gray-800">Media Arise</strong>.
+        Checkout is powered by Stripe on behalf of{' '}
+        <strong className="font-semibold text-gray-800">StoryCruz Films</strong>; card details are
+        never stored on this site. The charge will be clearly labeled as a Media Arise ministry
+        donation—not a film or invoice payment.
       </p>
 
       <fieldset className="mb-6">

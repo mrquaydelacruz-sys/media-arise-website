@@ -77,8 +77,10 @@ export default function GivingContent({data}: GivingContentProps) {
         <div className="mb-10 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Donate with card</h2>
           <p className="text-gray-600 mb-4 text-sm">
-            Give securely online via Stripe. You will be redirected to a hosted checkout; card
-            details are never processed on this website.
+            Give to <strong className="font-semibold text-gray-800">Media Arise</strong> via Stripe,
+            processed by <strong className="font-semibold text-gray-800">StoryCruz Films</strong>{' '}
+            (clearly labeled as a ministry donation, not a video invoice). You will be redirected
+            to hosted checkout; card details are not processed on this site.
           </p>
           <Link
             href="/donate"

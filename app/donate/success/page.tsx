@@ -11,7 +11,8 @@ export default function DonateSuccessPage() {
       <div className="max-w-md text-center">
         <h1 className="mb-3 text-2xl font-bold text-gray-900">Thank you</h1>
         <p className="mb-8 text-gray-600">
-          Your gift is appreciated. You should receive a receipt from Stripe by email.
+          Your gift to Media Arise is appreciated. Your receipt may show StoryCruz Films as the
+          processor; the line item describes your Media Arise ministry donation.
         </p>
         <Link
           href="/"

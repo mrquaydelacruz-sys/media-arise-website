@@ -1,6 +1,10 @@
 import {NextRequest, NextResponse} from 'next/server'
 import Stripe from 'stripe'
-import {fellowshipDonationMetadata} from '@/lib/fellowship-donation'
+import {
+  CHECKOUT_PRODUCT_DESCRIPTION,
+  CHECKOUT_PRODUCT_NAME,
+  fellowshipDonationMetadata,
+} from '@/lib/fellowship-donation'
 
 function getStripe() {
   const secretKey = process.env.STRIPE_SECRET_KEY
@@ -55,9 +59,8 @@ export async function POST(request: NextRequest) {
             currency,
             unit_amount: amountCents,
             product_data: {
-              name: 'Media Arise Donation',
-              description:
-                'Voluntary support for Media Arise ministry. Processed securely by Stripe.',
+              name: CHECKOUT_PRODUCT_NAME,
+              description: CHECKOUT_PRODUCT_DESCRIPTION,
               metadata: {
                 ...metadata,
               },
@@ -65,9 +68,16 @@ export async function POST(request: NextRequest) {
           },
         },
       ],
+      custom_text: {
+        submit: {
+          message:
+            'This charge is a donation to Media Arise ministry. It is processed by StoryCruz Films via Stripe and is separate from video production invoices.',
+        },
+      },
       metadata,
       payment_intent_data: {
         metadata,
+        // Bank/card statement: keep Media Arise visible alongside the StoryCruz Stripe account name
         statement_descriptor_suffix: 'MEDIA ARISE',
       },
       success_url: `${siteUrl}/donate/success?session_id={CHECKOUT_SESSION_ID}`,
