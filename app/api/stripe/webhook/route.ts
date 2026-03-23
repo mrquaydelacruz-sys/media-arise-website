@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         break
       }
       console.log(
-        '[stripe/webhook] Media Arise ministry donation completed (StoryCruz Films Stripe account)',
+        '[stripe/webhook] Media Arise ministry donation completed',
         session.id,
         session.amount_total,
         session.currency,

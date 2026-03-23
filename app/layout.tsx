@@ -4,10 +4,12 @@ import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import WebsiteAnnouncement from '@/components/WebsiteAnnouncement'
+import {OFFICIAL_SITE_URL} from '@/lib/site-url'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(OFFICIAL_SITE_URL),
   title: 'Media Arise - Online Fellowship & Community',
   description: 'Join our online fellowship sessions, stay updated with announcements, and discover upcoming events.',
   icons: {
@@ -34,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Media Arise - Online Fellowship & Community',
     description: 'Join our online fellowship sessions, stay updated with announcements, and discover upcoming events.',
-    url: 'https://mediaarise.com',
+    url: OFFICIAL_SITE_URL,
     siteName: 'Media Arise',
     images: [
       {

@@ -1,8 +1,8 @@
 # Fixing Vercel Deployment
 
 ## The Issue
-Vercel is building from: `storycruzfilms/media-arise-website`
-But your code is in: `mrquaydelacruz-sys/media-arise-website`
+Vercel may be building from the wrong GitHub repo (e.g. an old org fork).
+Confirm **Settings → Git** points at the repository where you actually push code.
 
 ## Solution: Update Vercel Project Settings
 
