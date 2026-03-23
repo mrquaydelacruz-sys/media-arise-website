@@ -5,7 +5,7 @@ import {
   CHECKOUT_PRODUCT_NAME,
   fellowshipDonationMetadata,
 } from '@/lib/fellowship-donation'
-import {getPublicSiteUrl} from '@/lib/site-url'
+import {getPublicSiteUrl, STRIPE_CHECKOUT_DISPLAY_NAME} from '@/lib/site-url'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -71,6 +71,9 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      branding_settings: {
+        display_name: STRIPE_CHECKOUT_DISPLAY_NAME,
+      },
       line_items: [
         {
           quantity: 1,

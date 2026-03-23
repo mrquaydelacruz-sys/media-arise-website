@@ -1,6 +1,9 @@
 /** Canonical production URL (no trailing slash). Used for OG metadata and Stripe redirects. */
 export const OFFICIAL_SITE_URL = 'https://mediaarise.com' as const
 
+/** Shown at the top of Stripe Checkout (overrides the account slug, e.g. storycruzfilms). */
+export const STRIPE_CHECKOUT_DISPLAY_NAME = 'Media Arise' as const
+
 /**
  * Public base URL for server-side redirects (Stripe success/cancel, etc.).
  *
