@@ -16,6 +16,8 @@ export default function Navigation() {
     {href: '/blog', label: 'Christian Life Blog'},
     {href: '/media', label: 'Media'},
     {href: '/register', label: 'Register'},
+    {href: '/giving', label: 'Giving'},
+    {href: '/donate', label: 'Donate'},
     {href: '/contact', label: 'Contact'},
   ]
 

@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 interface GivingData {
   title?: string
   description?: string
@@ -71,6 +73,20 @@ export default function GivingContent({data}: GivingContentProps) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
         <p className="text-gray-700 mb-8">{description}</p>
+
+        <div className="mb-10 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">Donate with card</h2>
+          <p className="text-gray-600 mb-4 text-sm">
+            Give securely online via Stripe. You will be redirected to a hosted checkout; card
+            details are never processed on this website.
+          </p>
+          <Link
+            href="/donate"
+            className="inline-block rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-900 transition-colors"
+          >
+            Donate with Stripe
+          </Link>
+        </div>
 
         {/* Giving Options */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
